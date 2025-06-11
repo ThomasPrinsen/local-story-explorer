@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -110,16 +109,54 @@ const InteractiveMap = () => {
     try {
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11',
+        style: {
+          version: 8,
+          sources: {
+            'world': {
+              type: 'vector',
+              url: 'mapbox://mapbox.country-boundaries-v1'
+            }
+          },
+          layers: [
+            {
+              id: 'background',
+              type: 'background',
+              paint: {
+                'background-color': '#f8fafc'
+              }
+            },
+            {
+              id: 'countries',
+              type: 'fill',
+              source: 'world',
+              'source-layer': 'country_boundaries',
+              paint: {
+                'fill-color': '#1e293b',
+                'fill-opacity': 1
+              }
+            },
+            {
+              id: 'country-borders',
+              type: 'line',
+              source: 'world',
+              'source-layer': 'country_boundaries',
+              paint: {
+                'line-color': '#f8fafc',
+                'line-width': 0.5
+              }
+            }
+          ]
+        },
         center: [20, 20],
-        zoom: 2,
-        projection: 'globe' as any
+        zoom: 1.5,
+        projection: 'naturalEarth' as any
       });
 
       // Add navigation controls
       map.current.addControl(
         new mapboxgl.NavigationControl({
-          visualizePitch: true,
+          visualizePitch: false,
+          showCompass: false
         }),
         'top-right'
       );
@@ -136,49 +173,58 @@ const InteractiveMap = () => {
         'top-right'
       );
 
-      // Add atmosphere
-      map.current.on('style.load', () => {
-        if (map.current) {
-          map.current.setFog({
-            color: 'rgb(186, 210, 235)',
-            'high-color': 'rgb(36, 92, 223)',
-            'horizon-blend': 0.02,
-            'space-color': 'rgb(11, 11, 25)',
-            'star-intensity': 0.6
-          });
-        }
-      });
-
       // Add story markers
       stories.forEach((story) => {
         const el = document.createElement('div');
         el.className = 'story-marker';
         el.style.cssText = `
-          width: 40px;
-          height: 40px;
-          background: white;
-          border: 3px solid #f97316;
+          width: 45px;
+          height: 45px;
+          background: linear-gradient(135deg, #f97316, #ea580c);
+          border: 3px solid white;
           border-radius: 50%;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 16px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-          transition: transform 0.2s ease;
+          font-size: 18px;
+          box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          position: relative;
         `;
         el.innerHTML = story.avatar;
         
+        // Add pulse animation
+        const pulse = document.createElement('div');
+        pulse.style.cssText = `
+          position: absolute;
+          inset: -8px;
+          border: 2px solid #f97316;
+          border-radius: 50%;
+          opacity: 0.6;
+          animation: pulse 2s infinite;
+        `;
+        el.appendChild(pulse);
+        
         el.addEventListener('mouseenter', () => {
-          el.style.transform = 'scale(1.1)';
+          el.style.transform = 'scale(1.15)';
+          el.style.boxShadow = '0 6px 20px rgba(249, 115, 22, 0.6)';
         });
         
         el.addEventListener('mouseleave', () => {
           el.style.transform = 'scale(1)';
+          el.style.boxShadow = '0 4px 15px rgba(249, 115, 22, 0.4)';
         });
         
         el.addEventListener('click', () => {
           setSelectedStory(story);
+          if (map.current) {
+            map.current.flyTo({
+              center: [story.lng, story.lat],
+              zoom: 8,
+              duration: 1500
+            });
+          }
         });
 
         if (map.current) {
@@ -264,11 +310,11 @@ const InteractiveMap = () => {
 
       {/* Interactive Map */}
       <div className="relative">
-        <Card className="overflow-hidden shadow-lg border-0">
+        <Card className="overflow-hidden shadow-xl border-0 rounded-2xl">
           <CardContent className="p-0">
             <div 
               ref={mapContainer} 
-              className="w-full h-96 md:h-[500px]"
+              className="w-full h-[70vh] md:h-[500px] lg:h-[600px]"
               style={{ minHeight: '400px' }}
             />
           </CardContent>
@@ -276,37 +322,39 @@ const InteractiveMap = () => {
 
         {/* Selected Story Details */}
         {selectedStory && (
-          <Card className="mt-4 shadow-lg border-orange-200 animate-scale-in">
+          <Card className="mt-6 shadow-xl border-orange-200 animate-scale-in rounded-xl">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-2xl">{selectedStory.avatar}</span>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-500 rounded-full flex items-center justify-center text-2xl shadow-lg">
+                      {selectedStory.avatar}
+                    </div>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900">{selectedStory.name}</h3>
-                      <p className="text-gray-600 flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
+                      <h3 className="text-2xl font-bold text-gray-900">{selectedStory.name}</h3>
+                      <p className="text-gray-600 flex items-center gap-2 text-lg">
+                        <MapPin className="w-5 h-5" />
                         {selectedStory.city}, {selectedStory.country}
                       </p>
                     </div>
                   </div>
-                  <p className="text-gray-700 mb-4">{selectedStory.previewStory}</p>
-                  <div className="flex items-center gap-3 mb-4">
-                    <Badge variant="secondary" className="text-xs">
-                      <Users className="w-3 h-3 mr-1" />
+                  <p className="text-gray-700 mb-6 text-lg leading-relaxed">{selectedStory.previewStory}</p>
+                  <div className="flex items-center gap-4 mb-6">
+                    <Badge variant="secondary" className="text-sm px-3 py-1">
+                      <Users className="w-4 h-4 mr-2" />
                       {selectedStory.locals} locals
                     </Badge>
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant="secondary" className="text-sm px-3 py-1">
                       {selectedStory.stories} verhalen
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Button className="bg-orange-500 hover:bg-orange-600">
-                      <Play className="w-4 h-4 mr-2" />
+                  <div className="flex items-center gap-4">
+                    <Button className="bg-orange-500 hover:bg-orange-600 px-6 py-3">
+                      <Play className="w-5 h-5 mr-2" />
                       Verhaal Bekijken
                     </Button>
-                    <Button variant="outline" className="border-orange-200 text-orange-700">
-                      <Volume2 className="w-4 h-4 mr-2" />
+                    <Button variant="outline" className="border-orange-200 text-orange-700 px-6 py-3">
+                      <Volume2 className="w-5 h-5 mr-2" />
                       Audio Beluisteren
                     </Button>
                   </div>
@@ -315,9 +363,9 @@ const InteractiveMap = () => {
                   variant="ghost" 
                   size="sm"
                   onClick={() => setSelectedStory(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 ml-4"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </Button>
               </div>
             </CardContent>
@@ -326,20 +374,37 @@ const InteractiveMap = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="text-center p-6 border-orange-100">
-          <div className="text-3xl font-bold text-orange-600 mb-2">156</div>
-          <div className="text-gray-600">Lokale Verhalen</div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="text-center p-8 border-orange-100 hover:shadow-lg transition-shadow">
+          <div className="text-4xl font-bold text-orange-600 mb-3">156</div>
+          <div className="text-gray-600 text-lg">Lokale Verhalen</div>
         </Card>
-        <Card className="text-center p-6 border-orange-100">
-          <div className="text-3xl font-bold text-orange-600 mb-2">42</div>
-          <div className="text-gray-600">Steden</div>
+        <Card className="text-center p-8 border-orange-100 hover:shadow-lg transition-shadow">
+          <div className="text-4xl font-bold text-orange-600 mb-3">42</div>
+          <div className="text-gray-600 text-lg">Steden</div>
         </Card>
-        <Card className="text-center p-6 border-orange-100">
-          <div className="text-3xl font-bold text-orange-600 mb-2">89</div>
-          <div className="text-gray-600">Locals</div>
+        <Card className="text-center p-8 border-orange-100 hover:shadow-lg transition-shadow">
+          <div className="text-4xl font-bold text-orange-600 mb-3">89</div>
+          <div className="text-gray-600 text-lg">Locals</div>
         </Card>
       </div>
+
+      <style jsx>{`
+        @keyframes pulse {
+          0% {
+            transform: scale(1);
+            opacity: 0.6;
+          }
+          50% {
+            transform: scale(1.1);
+            opacity: 0.3;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 0.6;
+          }
+        }
+      `}</style>
     </div>
   );
 };
