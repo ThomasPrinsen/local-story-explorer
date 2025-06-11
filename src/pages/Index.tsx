@@ -4,6 +4,7 @@ import { MapPin, Users, DollarSign, AlertTriangle, Plus, Globe } from 'lucide-re
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 import MapView from '@/components/MapView';
 import LocalStories from '@/components/LocalStories';
 import TravelTips from '@/components/TravelTips';
@@ -11,6 +12,7 @@ import CulturalGuide from '@/components/CulturalGuide';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('map');
+  const navigate = useNavigate();
 
   const navigationItems = [
     { id: 'map', label: 'Kaart', icon: MapPin },
@@ -45,13 +47,14 @@ const Index = () => {
                 <Globe className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">LocalLens</h1>
-                <p className="text-sm text-gray-600">Ontdek de wereld door lokale ogen</p>
+                <h1 className="text-2xl font-bold text-gray-900">Yaro</h1>
+                <p className="text-sm text-gray-600">Respectvol Reizen met Lokale Verhalen</p>
               </div>
             </div>
             <Button 
               variant="outline" 
               className="border-orange-200 text-orange-700 hover:bg-orange-50"
+              onClick={() => navigate('/verhaal-delen')}
             >
               <Plus className="w-4 h-4 mr-2" />
               Verhaal Delen
@@ -97,7 +100,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Over LocalLens</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">Over Yaro</h3>
               <p className="text-gray-600 text-sm">
                 Verbind met lokale bewoners en ontdek authentieke reiservaren door hun verhalen, tips en culturele inzichten.
               </p>
