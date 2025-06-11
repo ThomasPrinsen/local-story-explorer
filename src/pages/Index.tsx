@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
-import MapView from '@/components/MapView';
+import InteractiveMap from '@/components/InteractiveMap';
 import LocalStories from '@/components/LocalStories';
 import TravelTips from '@/components/TravelTips';
 import CulturalGuide from '@/components/CulturalGuide';
@@ -24,7 +24,7 @@ const Index = () => {
   const renderActiveSection = () => {
     switch (activeSection) {
       case 'map':
-        return <MapView />;
+        return <InteractiveMap />;
       case 'stories':
         return <LocalStories />;
       case 'tips':
@@ -32,7 +32,7 @@ const Index = () => {
       case 'culture':
         return <CulturalGuide />;
       default:
-        return <MapView />;
+        return <InteractiveMap />;
     }
   };
 
