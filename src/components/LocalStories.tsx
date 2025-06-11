@@ -10,6 +10,7 @@ const LocalStories = () => {
   const [filters, setFilters] = useState({ continent: '', country: '', city: '' });
 
   const stories = [
+    // Europa - Nederland
     {
       id: 1,
       title: 'De verborgen grachten van Amsterdam',
@@ -28,6 +29,23 @@ const LocalStories = () => {
     },
     {
       id: 2,
+      title: 'Fietsen door Utrecht als een local',
+      author: 'Pieter Janssen',
+      location: 'Utrecht, Nederland',
+      continent: 'Europa',
+      country: 'Nederland',
+      city: 'Utrecht',
+      avatar: '🚴‍♂️',
+      preview: 'Vermijd de drukte en ontdek de mooiste fietsroutes door Utrecht. Van geheime hofjes tot de beste koffieplekjes.',
+      duration: '5:12',
+      likes: 98,
+      comments: 15,
+      type: 'video',
+      tags: ['fietsen', 'routes', 'koffie']
+    },
+    // Europa - Spanje
+    {
+      id: 3,
       title: 'Tapas eten zoals een echte Barcelonees',
       author: 'Carlos Rodriguez',
       location: 'Barcelona, Spanje',
@@ -43,7 +61,58 @@ const LocalStories = () => {
       tags: ['eten', 'cultuur', 'locals']
     },
     {
-      id: 3,
+      id: 4,
+      title: 'Flamenco in de wijken van Sevilla',
+      author: 'María González',
+      location: 'Sevilla, Spanje',
+      continent: 'Europa',
+      country: 'Spanje',
+      city: 'Sevilla',
+      avatar: '💃',
+      preview: 'Echte flamenco vind je niet in shows voor toeristen. Kom mee naar de wijken waar deze passie echt leeft.',
+      duration: '7:30',
+      likes: 221,
+      comments: 38,
+      type: 'video',
+      tags: ['flamenco', 'cultuur', 'muziek']
+    },
+    // Europa - Frankrijk
+    {
+      id: 5,
+      title: 'Boulangeries van Montmartre',
+      author: 'Sophie Dubois',
+      location: 'Parijs, Frankrijk',
+      continent: 'Europa',
+      country: 'Frankrijk',
+      city: 'Parijs',
+      avatar: '🥖',
+      preview: 'De beste croissants van Parijs vind je niet bij de Eiffeltoren. Ontdek de authentieke boulangeries van Montmartre.',
+      duration: '4:45',
+      likes: 167,
+      comments: 29,
+      type: 'audio',
+      tags: ['brood', 'eten', 'tradities']
+    },
+    // Europa - Italië
+    {
+      id: 6,
+      title: 'Venetië zonder de massa\'s',
+      author: 'Marco Rossini',
+      location: 'Venetië, Italië',
+      continent: 'Europa',
+      country: 'Italië',
+      city: 'Venetië',
+      avatar: '🛶',
+      preview: 'Vroeg opstaan loont in Venetië. Ik toon je hoe je onze stad kunt ervaren voordat de cruiseschepen arriveren.',
+      duration: '6:00',
+      likes: 312,
+      comments: 52,
+      type: 'video',
+      tags: ['vroeg opstaan', 'rustige plekken', 'fotografie']
+    },
+    // Azië - Japan
+    {
+      id: 7,
       title: 'Tempeletiquette in Kyoto',
       author: 'Yuki Tanaka',
       location: 'Kyoto, Japan',
@@ -59,7 +128,58 @@ const LocalStories = () => {
       tags: ['cultuur', 'religie', 'respect']
     },
     {
-      id: 4,
+      id: 8,
+      title: 'Sushi etiquette in Tokyo',
+      author: 'Hiroshi Sato',
+      location: 'Tokyo, Japan',
+      continent: 'Azië',
+      country: 'Japan',
+      city: 'Tokyo',
+      avatar: '🍣',
+      preview: 'Leer hoe je respectvol sushi eet in een traditioneel restaurant. Van wasabi gebruik tot het betalen van de rekening.',
+      duration: '5:20',
+      likes: 198,
+      comments: 31,
+      type: 'video',
+      tags: ['sushi', 'etiquette', 'restaurants']
+    },
+    // Azië - Thailand
+    {
+      id: 9,
+      title: 'Tempels bezoeken in Bangkok',
+      author: 'Somchai Patel',
+      location: 'Bangkok, Thailand',
+      continent: 'Azië',
+      country: 'Thailand',
+      city: 'Bangkok',
+      avatar: '🙏',
+      preview: 'Kledingregels, gedrag en donaties bij tempelbezoeken. Respectvol genieten van onze prachtige tempels.',
+      duration: '4:30',
+      likes: 145,
+      comments: 22,
+      type: 'video',
+      tags: ['tempels', 'respect', 'kleding']
+    },
+    // Azië - India
+    {
+      id: 10,
+      title: 'Straatvoedsel in Mumbai',
+      author: 'Priya Sharma',
+      location: 'Mumbai, India',
+      continent: 'Azië',
+      country: 'India',
+      city: 'Mumbai',
+      avatar: '🍛',
+      preview: 'Veilig en lekker straatvoedsel in Mumbai. Welke standjes je kunt vertrouwen en hoe je bestelt als toerist.',
+      duration: '6:45',
+      likes: 234,
+      comments: 41,
+      type: 'video',
+      tags: ['straatvoedsel', 'veiligheid', 'lokaal eten']
+    },
+    // Afrika - Marokko
+    {
+      id: 11,
       title: 'Onderhandelen op de markt in Marrakech',
       author: 'Ahmed Ben Ali',
       location: 'Marrakech, Marokko',
@@ -73,6 +193,124 @@ const LocalStories = () => {
       comments: 34,
       type: 'video',
       tags: ['markt', 'onderhandelen', 'cultuur']
+    },
+    {
+      id: 12,
+      title: 'Thee cultuur in Fez',
+      author: 'Fatima El Mansouri',
+      location: 'Fez, Marokko',
+      continent: 'Afrika',
+      country: 'Marokko',
+      city: 'Fez',
+      avatar: '🫖',
+      preview: 'De kunst van het thee drinken in Marokko. Wanneer je accepteert, hoe je drinkt en wat het betekent voor onze gastvrijheid.',
+      duration: '4:15',
+      likes: 156,
+      comments: 28,
+      type: 'audio',
+      tags: ['thee', 'tradities', 'gastvrijheid']
+    },
+    // Afrika - Zuid-Afrika
+    {
+      id: 13,
+      title: 'Township tours in Kaapstad',
+      author: 'Mandla Ndlovu',
+      location: 'Kaapstad, Zuid-Afrika',
+      continent: 'Afrika',
+      country: 'Zuid-Afrika',
+      city: 'Kaapstad',
+      avatar: '🏘️',
+      preview: 'Respectvolle township bezoeken. Hoe je onze gemeenschappen bezoekt zonder voyeurisme, maar met waardering.',
+      duration: '7:00',
+      likes: 267,
+      comments: 45,
+      type: 'video',
+      tags: ['townships', 'respect', 'gemeenschap']
+    },
+    // Noord-Amerika - VS
+    {
+      id: 14,
+      title: 'Jazz in New Orleans',
+      author: 'Louis Jackson',
+      location: 'New Orleans, Verenigde Staten',
+      continent: 'Noord-Amerika',
+      country: 'Verenigde Staten',
+      city: 'New Orleans',
+      avatar: '🎷',
+      preview: 'Echte jazz experience in de French Quarter. Waar locals naar muziek luisteren en hoe je de cultuur respecteert.',
+      duration: '5:45',
+      likes: 189,
+      comments: 33,
+      type: 'video',
+      tags: ['jazz', 'muziek', 'cultuur']
+    },
+    // Noord-Amerika - Canada
+    {
+      id: 15,
+      title: 'First Nations cultuur in Vancouver',
+      author: 'Sarah Littlewolf',
+      location: 'Vancouver, Canada',
+      continent: 'Noord-Amerika',
+      country: 'Canada',
+      city: 'Vancouver',
+      avatar: '🪶',
+      preview: 'Leer over onze First Nations erfgoed. Respectvolle manieren om onze cultuur te leren kennen en waarderen.',
+      duration: '6:30',
+      likes: 201,
+      comments: 29,
+      type: 'video',
+      tags: ['first nations', 'erfgoed', 'respect']
+    },
+    // Zuid-Amerika - Brazilië
+    {
+      id: 16,
+      title: 'Carnaval in Rio de Janeiro',
+      author: 'Isabella Santos',
+      location: 'Rio de Janeiro, Brazilië',
+      continent: 'Zuid-Amerika',
+      country: 'Brazilië',
+      city: 'Rio de Janeiro',
+      avatar: '🎭',
+      preview: 'Carnaval is meer dan een feest. Leer over de geschiedenis, betekenis en hoe je respectvol meedoet.',
+      duration: '8:00',
+      likes: 345,
+      comments: 67,
+      type: 'video',
+      tags: ['carnaval', 'historie', 'cultuur']
+    },
+    // Zuid-Amerika - Peru
+    {
+      id: 17,
+      title: 'Coca bladeren in Cusco',
+      author: 'Carlos Quispe',
+      location: 'Cusco, Peru',
+      continent: 'Zuid-Amerika',
+      country: 'Peru',
+      city: 'Cusco',
+      avatar: '🌿',
+      preview: 'De heilige coca plant in onze Andescultuur. Waarom het belangrijk is en hoe toeristen dit respecteren.',
+      duration: '4:50',
+      likes: 178,
+      comments: 25,
+      type: 'audio',
+      tags: ['coca', 'andes', 'tradities']
+    },
+    // Oceanië - Australië
+    {
+      id: 18,
+      title: 'Aboriginal cultuur in Sydney',
+      author: 'David Yamirra',
+      location: 'Sydney, Australië',
+      continent: 'Oceanië',
+      country: 'Australië',
+      city: 'Sydney',
+      avatar: '🪃',
+      preview: 'Onze Aboriginal geschiedenis en cultuur. Respectvolle manieren om te leren over de oudste beschaving ter wereld.',
+      duration: '7:15',
+      likes: 223,
+      comments: 38,
+      type: 'video',
+      tags: ['aboriginal', 'geschiedenis', 'respect']
     }
   ];
 

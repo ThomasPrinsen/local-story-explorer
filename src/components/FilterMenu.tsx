@@ -1,15 +1,7 @@
 
 import React, { useState } from 'react';
-import { Globe, MapPin, Search, Filter } from 'lucide-react';
+import { Globe, MapPin, Search, Filter, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 
 interface FilterMenuProps {
@@ -20,6 +12,8 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ onFilterChange }) => {
   const [selectedContinent, setSelectedContinent] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
+  const [hoveredContinent, setHoveredContinent] = useState('');
+  const [hoveredCountry, setHoveredCountry] = useState('');
 
   const continents = [
     'Europa',
@@ -42,9 +36,18 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ onFilterChange }) => {
   const citiesByCountry = {
     'Nederland': ['Amsterdam', 'Rotterdam', 'Utrecht', 'Den Haag'],
     'Spanje': ['Barcelona', 'Madrid', 'Sevilla', 'Valencia'],
+    'Frankrijk': ['Parijs', 'Lyon', 'Marseille', 'Nice'],
+    'Italië': ['Rome', 'Milaan', 'Venetië', 'Florence'],
     'Japan': ['Tokyo', 'Kyoto', 'Osaka', 'Hiroshima'],
     'Thailand': ['Bangkok', 'Chiang Mai', 'Phuket', 'Pattaya'],
-    'Marokko': ['Marrakech', 'Casablanca', 'Fez', 'Rabat']
+    'India': ['Mumbai', 'Delhi', 'Bangalore', 'Kolkata'],
+    'Verenigde Staten': ['New York', 'Los Angeles', 'Chicago', 'New Orleans'],
+    'Canada': ['Toronto', 'Vancouver', 'Montreal', 'Calgary'],
+    'Brazilië': ['Rio de Janeiro', 'São Paulo', 'Salvador', 'Brasília'],
+    'Peru': ['Lima', 'Cusco', 'Arequipa', 'Iquitos'],
+    'Marokko': ['Marrakech', 'Casablanca', 'Fez', 'Rabat'],
+    'Zuid-Afrika': ['Kaapstad', 'Johannesburg', 'Durban', 'Pretoria'],
+    'Australië': ['Sydney', 'Melbourne', 'Brisbane', 'Perth']
   };
 
   const handleContinentSelect = (continent: string) => {
@@ -69,6 +72,8 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ onFilterChange }) => {
     setSelectedContinent('');
     setSelectedCountry('');
     setSelectedCity('');
+    setHoveredContinent('');
+    setHoveredCountry('');
     onFilterChange({ continent: '', country: '', city: '' });
   };
 
@@ -81,77 +86,94 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ onFilterChange }) => {
         <span className="text-sm font-medium text-gray-700">Filters:</span>
       </div>
 
-      {/* Continent Dropdown */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="border-orange-200 hover:bg-orange-50">
-            <Globe className="w-4 h-4 mr-2" />
-            {selectedContinent || 'Continent'}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-48 bg-white border-orange-200">
-          <DropdownMenuLabel>Selecteer continent</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          {continents.map((continent) => (
-            <DropdownMenuItem
-              key={continent}
-              onClick={() => handleContinentSelect(continent)}
-              className="cursor-pointer hover:bg-orange-50"
-            >
-              {continent}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {/* Continent Dropdown with Hover */}
+      <div className="relative">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="border-orange-200 hover:bg-orange-50 flex items-center gap-2"
+          onMouseEnter={() => setHoveredContinent('show')}
+          onMouseLeave={() => setHoveredContinent('')}
+        >
+          <Globe className="w-4 h-4" />
+          {selectedContinent || 'Continent'}
+          <ChevronDown className="w-3 h-3" />
+        </Button>
+
+        {/* Continent Dropdown */}
+        {hoveredContinent && (
+          <div 
+            className="absolute top-full left-0 mt-1 w-48 bg-white border border-orange-200 rounded-lg shadow-lg z-50 animate-fade-in"
+            onMouseEnter={() => setHoveredContinent('show')}
+            onMouseLeave={() => setHoveredContinent('')}
+          >
+            <div className="p-2">
+              <div className="text-xs font-semibold text-gray-500 px-2 py-1">Selecteer continent</div>
+              {continents.map((continent) => (
+                <button
+                  key={continent}
+                  onClick={() => handleContinentSelect(continent)}
+                  onMouseEnter={() => setHoveredCountry(continent)}
+                  className="w-full text-left px-2 py-2 text-sm hover:bg-orange-50 rounded cursor-pointer transition-colors relative"
+                >
+                  {continent}
+                  
+                  {/* Countries Submenu */}
+                  {hoveredCountry === continent && (
+                    <div className="absolute left-full top-0 ml-1 w-48 bg-white border border-orange-200 rounded-lg shadow-lg z-60 animate-fade-in">
+                      <div className="p-2">
+                        <div className="text-xs font-semibold text-gray-500 px-2 py-1">Landen in {continent}</div>
+                        {countriesByContinent[continent]?.map((country) => (
+                          <button
+                            key={country}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleContinentSelect(continent);
+                              handleCountrySelect(country);
+                            }}
+                            className="w-full text-left px-2 py-2 text-sm hover:bg-orange-50 rounded cursor-pointer transition-colors"
+                          >
+                            {country}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Country Dropdown */}
       {selectedContinent && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="border-orange-200 hover:bg-orange-50">
-              <MapPin className="w-4 h-4 mr-2" />
-              {selectedCountry || 'Land'}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-48 bg-white border-orange-200">
-            <DropdownMenuLabel>Selecteer land</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {countriesByContinent[selectedContinent]?.map((country) => (
-              <DropdownMenuItem
-                key={country}
-                onClick={() => handleCountrySelect(country)}
-                className="cursor-pointer hover:bg-orange-50"
-              >
-                {country}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="relative">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="border-orange-200 hover:bg-orange-50 flex items-center gap-2"
+          >
+            <MapPin className="w-4 h-4" />
+            {selectedCountry || 'Land'}
+            <ChevronDown className="w-3 h-3" />
+          </Button>
+        </div>
       )}
 
       {/* City Dropdown */}
       {selectedCountry && citiesByCountry[selectedCountry] && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="border-orange-200 hover:bg-orange-50">
-              <Search className="w-4 h-4 mr-2" />
-              {selectedCity || 'Stad'}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-48 bg-white border-orange-200">
-            <DropdownMenuLabel>Selecteer stad</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {citiesByCountry[selectedCountry].map((city) => (
-              <DropdownMenuItem
-                key={city}
-                onClick={() => handleCitySelect(city)}
-                className="cursor-pointer hover:bg-orange-50"
-              >
-                {city}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="relative">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="border-orange-200 hover:bg-orange-50 flex items-center gap-2"
+          >
+            <Search className="w-4 h-4" />
+            {selectedCity || 'Stad'}
+            <ChevronDown className="w-3 h-3" />
+          </Button>
+        </div>
       )}
 
       {/* Active Filters Display */}

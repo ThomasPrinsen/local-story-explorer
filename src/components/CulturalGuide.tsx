@@ -1,132 +1,195 @@
 
 import React, { useState } from 'react';
-import { CheckCircle, XCircle, AlertTriangle, BookOpen, Users, Heart } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertTriangle, CheckCircle, XCircle, HelpCircle, Trophy } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import FilterMenu from './FilterMenu';
 
 const CulturalGuide = () => {
-  const [selectedGuide, setSelectedGuide] = useState(null);
-  const [quizScore, setQuizScore] = useState(0);
-  const [currentQuiz, setCurrentQuiz] = useState(0);
-  const [showQuizResult, setShowQuizResult] = useState(false);
+  const [filters, setFilters] = useState({ continent: '', country: '', city: '' });
+  const [quizActive, setQuizActive] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [score, setScore] = useState(0);
+  const [quizComplete, setQuizComplete] = useState(false);
 
   const culturalGuides = [
+    // Europa
     {
       id: 1,
-      title: 'Begroetingen Wereldwijd',
-      region: 'Internationaal',
-      icon: '👋',
-      importance: 'Hoog',
+      location: 'Amsterdam, Nederland',
+      continent: 'Europa',
+      country: 'Nederland',
+      city: 'Amsterdam',
       dos: [
-        'Nederland: Stevige handdruk met oogcontact',
-        'Japan: Buig licht (15°) bij eerste ontmoeting',
-        'Spanje: Twee kusjes op de wang bij vrienden',
-        'Marokko: "As-salāmu ʿalaykum" en handdruk'
+        'Fiets respectvol - geef voetgangers voorrang',
+        'Wacht tot iedereen is ingestapt voordat je uitstapt (tram/metro)',
+        'Leer een paar woorden Nederlands - wordt gewaardeerd',
+        'Respecteer de coffeeshop cultuur - niet roken op straat'
       ],
       donts: [
-        'Nederland: Niet te enthousiast omhelzen',
-        'Japan: Geen handdruk forceren als ze buigen',
-        'Spanje: Geen kusjes bij zakelijke meetings',
-        'Marokko: Geen fysiek contact tussen mannen/vrouwen'
+        'Niet midden op het fietspad lopen',
+        'Geen foto\'s maken van mensen in de Red Light District',
+        'Niet schreeuwen of luidruchtig zijn in woonwijken',
+        'Geen drugs gebruiken buiten aangewezen plekken'
       ],
-      context: 'Begroetingen zijn de eerste indruk en tonen respect voor lokale gewoontes.'
+      greetings: 'Handen schudden en "Hallo" of "Goedemorgen"',
+      tipping: '10% in restaurants als je tevreden bent. Afronden in cafés.',
+      clothing: 'Casual kleding prima. Geen speciale kledingregels.',
+      taboos: 'Vergelijken met Duitsland. Praten over WO2 zonder context.'
     },
     {
       id: 2,
-      title: 'Eetcultuur & Tafelmanieren',
-      region: 'Wereldwijd',
-      icon: '🍽️',
-      importance: 'Hoog',
+      location: 'Barcelona, Spanje',
+      continent: 'Europa',
+      country: 'Spanje',
+      city: 'Barcelona',
       dos: [
-        'Japan: Zeg "Itadakimasu" voor het eten',
-        'Nederland: Wacht tot iedereen heeft voor je begint',
-        'Spanje: Eet tapas met je handen, dat is normaal',
-        'Marokko: Eet met je rechterhand, linker is onrein'
+        'Leer "Bon dia" (Catalaans) - lokale taal',
+        'Eet laat - lunch 14:00, diner na 21:00',
+        'Respecteer siësta tijd (14:00-17:00)',
+        'Wandel langzaam - haast wordt niet gewaardeerd'
       ],
       donts: [
-        'Japan: Steek je stokjes niet rechtop in rijst',
-        'Nederland: Geen ellebogen op tafel tijdens eten',
-        'Spanje: Geen fooi laten als service slecht was',
-        'Marokko: Geen alcohol bestellen in traditionele plekken'
+        'Geen Spaans verwachten - veel mensen spreken Catalaans',
+        'Niet te vroeg dineren (voor 20:00)',
+        'Geen shorts in kerken of formele plekken',
+        'Niet vergelijken met rest van Spanje'
       ],
-      context: 'Eetgewoontes zijn diep geworteld in cultuur en religie.'
+      greetings: 'Twee zoenen (wang aan wang) bij introductie',
+      tipping: '5-10% in restaurants. Kleingeld voor tapas.',
+      clothing: 'Smart casual. Bedekkende kleding in religieuze gebouwen.',
+      taboos: 'Politiek over onafhankelijkheid Catalonië vermijden.'
     },
+    // Azië
     {
       id: 3,
-      title: 'Kledingvoorschriften',
-      region: 'Religeuze Plaatsen',
-      icon: '👔',
-      importance: 'Zeer Hoog',
+      location: 'Kyoto, Japan',
+      continent: 'Azië',
+      country: 'Japan',
+      city: 'Kyoto',
       dos: [
-        'Moskeeën: Bedek armen, benen, hoofd (vrouwen)',
-        'Tempels Japan: Nette kleding, geen korte broek',
-        'Kerken Europa: Respectvolle, bedekte kleding',
-        'Synagoges: Keppeltje voor mannen beschikbaar'
+        'Buig licht bij begroeting en bedanken',
+        'Trek schoenen uit bij tempels en huizen',
+        'Stil zijn in tempels en openbaar vervoer',
+        'Ga uit de weg van geisha\'s - zij werken'
       ],
       donts: [
-        'Geen strakke of transparante kleding',
-        'Geen shorts/flipflops in heilige plaatsen',
-        'Geen religieuze symbolen van andere geloven',
-        'Geen fotograferen zonder toestemming'
+        'Geen foto\'s van geisha\'s zonder toestemming',
+        'Niet eten tijdens het lopen',
+        'Geen luide gesprekken in treinen',
+        'Niet aanraken van heilige objecten'
       ],
-      context: 'Kledingregels tonen respect voor geloof en traditie.'
+      greetings: 'Lichte buiging, geen handdruk tenzij aangeboden',
+      tipping: 'Niet fooien - wordt als beledigend gezien',
+      clothing: 'Bescheiden kleding. Schoenen makkelijk uit te trekken.',
+      taboos: 'WO2 onderwerpen. Neus snuiten in het openbaar.'
+    },
+    {
+      id: 4,
+      location: 'Bangkok, Thailand',
+      continent: 'Azië',
+      country: 'Thailand',
+      city: 'Bangkok',
+      dos: [
+        'Wai begroeting (handpalmen tegen elkaar)',
+        'Respecteer koning en koninklijke familie',
+        'Bedek schouders en knieën in tempels',
+        'Leer "Sawasdee" (hallo) te zeggen'
+      ],
+      donts: [
+        'Nooit hoofd aanraken - heiligste lichaamsdeel',
+        'Niet wijzen met voeten naar mensen/Buddha',
+        'Geen kritiek op koninklijke familie',
+        'Niet boos worden in het openbaar'
+      ],
+      greetings: 'Wai met lichte buiging. Hoe hoger de handen, hoe respectvoller.',
+      tipping: '10% in restaurants. Afronden voor diensten.',
+      clothing: 'Bedekte schouders/knieën voor tempels. Lichte, ademende stoffen.',
+      taboos: 'Koninklijke familie kritiseren. Boedhabeelden aanraken.'
+    },
+    // Afrika
+    {
+      id: 5,
+      location: 'Marrakech, Marokko',
+      continent: 'Afrika',
+      country: 'Marokko',
+      city: 'Marrakech',
+      dos: [
+        'Gebruik rechterhand voor eten en begroetingen',
+        'Accepteer uitnodigingen voor thee',
+        'Onderhandel respectvol op markten',
+        'Leer "As-salamu alaykum" (vrede zij met u)'
+      ],
+      donts: [
+        'Niet eten met linkerhand',
+        'Geen alcohol drinken in het openbaar',
+        'Niet weigeren aangeboden gastvrijheid',
+        'Geen korte kleding in oude stad'
+      ],
+      greetings: 'Handdruk met rechterhand. Drie zoenen voor goede vrienden.',
+      tipping: '10-15% in restaurants. Kleine bedragen voor services.',
+      clothing: 'Bedekte armen/benen vooral voor vrouwen. Respectvolle kleding.',
+      taboos: 'Politiek vermijden. Niet fotograferen zonder toestemming.'
     }
   ];
 
   const quizQuestions = [
     {
-      question: 'Hoe begroet je iemand in Japan bij een eerste zakelijke ontmoeting?',
-      options: [
-        'Stevige handdruk met oogcontact',
-        'Lichte buiging van 15 graden',
-        'Vriendelijke omhelzing',
-        'High five'
-      ],
+      question: 'Hoe begroet je iemand in Japan?',
+      options: ['Stevige handdruk', 'Lichte buiging', 'Twee zoenen', 'High five'],
       correct: 1,
-      explanation: 'In Japan is een lichte buiging de traditionele en meest respectvolle begroeting bij formele ontmoetingen.'
+      explanation: 'In Japan is een lichte buiging de traditionele en respectvolle begroeting.'
     },
     {
-      question: 'Wat doe je NIET in een moskee?',
-      options: [
-        'Je schoenen uittrekken',
-        'Je hoofd bedekken',
-        'Foto\'s maken zonder toestemming',
-        'Stil zijn tijdens gebed'
-      ],
+      question: 'Wat doe je NIET in een Thaise tempel?',
+      options: ['Schoenen uittrekken', 'Wijzen met je voeten', 'Stil zijn', 'Respectvol gedragen'],
+      correct: 1,
+      explanation: 'In Thailand wordt wijzen met voeten als zeer onrespectvol beschouwd.'
+    },
+    {
+      question: 'Hoeveel fooi geef je in Nederland?',
+      options: ['20%', 'Helemaal geen', '10% als je tevreden bent', '5% altijd'],
       correct: 2,
-      explanation: 'Fotograferen zonder toestemming is onrespectvol en vaak verboden in religieuze ruimtes.'
-    },
-    {
-      question: 'Hoe eet je traditioneel tapas in Spanje?',
-      options: [
-        'Met mes en vork',
-        'Met je handen',
-        'Staand aan de bar',
-        'Alleen optie B en C'
-      ],
-      correct: 3,
-      explanation: 'Tapas eet je traditioneel met je handen terwijl je staat aan de bar - dit is de authentieke Spaanse manier.'
+      explanation: 'In Nederland is 10% fooi gebruikelijk als je tevreden bent met de service.'
     }
   ];
 
-  const handleQuizAnswer = (selectedAnswer) => {
-    if (selectedAnswer === quizQuestions[currentQuiz].correct) {
-      setQuizScore(quizScore + 1);
+  const filteredGuides = culturalGuides.filter(guide => {
+    if (filters.city && guide.city !== filters.city) return false;
+    if (filters.country && guide.country !== filters.country) return false;
+    if (filters.continent && guide.continent !== filters.continent) return false;
+    return true;
+  });
+
+  const handleFilterChange = (newFilters: { continent: string; country: string; city: string }) => {
+    setFilters(newFilters);
+  };
+
+  const startQuiz = () => {
+    setQuizActive(true);
+    setCurrentQuestion(0);
+    setScore(0);
+    setQuizComplete(false);
+  };
+
+  const handleAnswer = (selectedAnswer: number) => {
+    if (selectedAnswer === quizQuestions[currentQuestion].correct) {
+      setScore(score + 1);
     }
-    
-    if (currentQuiz < quizQuestions.length - 1) {
-      setCurrentQuiz(currentQuiz + 1);
+
+    if (currentQuestion + 1 < quizQuestions.length) {
+      setCurrentQuestion(currentQuestion + 1);
     } else {
-      setShowQuizResult(true);
+      setQuizComplete(true);
     }
   };
 
   const resetQuiz = () => {
-    setCurrentQuiz(0);
-    setQuizScore(0);
-    setShowQuizResult(false);
+    setQuizActive(false);
+    setQuizComplete(false);
+    setCurrentQuestion(0);
+    setScore(0);
   };
 
   return (
@@ -135,234 +198,154 @@ const CulturalGuide = () => {
       <div className="text-center space-y-2">
         <h2 className="text-3xl font-bold text-gray-900">Do's & Don'ts</h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Leer de belangrijkste culturele gewoontes om respectvol te reizen.
+          Culturele richtlijnen en etiquette tips van locals om respectvol te reizen.
         </p>
       </div>
 
-      <Tabs defaultValue="guides" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="guides">Culturele Gidsen</TabsTrigger>
-          <TabsTrigger value="quiz">Interactieve Quiz</TabsTrigger>
-        </TabsList>
+      {/* Filter Menu */}
+      <FilterMenu onFilterChange={handleFilterChange} />
 
-        <TabsContent value="guides" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {culturalGuides.map((guide) => (
-              <Card 
-                key={guide.id}
-                className="group cursor-pointer hover:shadow-lg transition-all duration-200 border-orange-100 hover:border-orange-200"
-                onClick={() => setSelectedGuide(guide)}
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge 
-                      variant={guide.importance === 'Zeer Hoog' ? 'destructive' : 'secondary'}
-                      className="text-xs"
-                    >
-                      {guide.importance}
-                    </Badge>
-                    <AlertTriangle className="w-4 h-4 text-orange-500" />
-                  </div>
-                  
-                  <div className="text-center py-4">
-                    <span className="text-4xl mb-2 block">{guide.icon}</span>
-                  </div>
+      {/* Quiz Section */}
+      <Card className="border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <HelpCircle className="w-6 h-6 text-orange-600" />
+            Culturele Etiquette Quiz
+          </CardTitle>
+          <CardDescription>
+            Test je kennis over verschillende culturele gebruiken wereldwijd.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {!quizActive && !quizComplete && (
+            <Button onClick={startQuiz} className="bg-orange-500 hover:bg-orange-600">
+              Start Quiz
+            </Button>
+          )}
 
-                  <CardTitle className="text-lg group-hover:text-orange-600 transition-colors">
-                    {guide.title}
-                  </CardTitle>
-                </CardHeader>
-                
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    <p className="text-sm text-gray-600">{guide.region}</p>
-                    <p className="text-sm text-gray-700">{guide.context}</p>
-                    
-                    <div className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span className="text-gray-600">{guide.dos.length} Do's</span>
-                      <XCircle className="w-4 h-4 text-red-500 ml-2" />
-                      <span className="text-gray-600">{guide.donts.length} Don'ts</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="quiz" className="space-y-6">
-          <Card className="max-w-2xl mx-auto border-orange-100">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5" />
-                Culturele Etiquette Quiz
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {!showQuizResult ? (
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">
-                      Vraag {currentQuiz + 1} van {quizQuestions.length}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      Score: {quizScore}/{currentQuiz}
-                    </span>
-                  </div>
-
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-orange-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${((currentQuiz + 1) / quizQuestions.length) * 100}%` }}
-                    ></div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {quizQuestions[currentQuiz].question}
-                    </h3>
-                    
-                    <div className="space-y-2">
-                      {quizQuestions[currentQuiz].options.map((option, index) => (
-                        <Button
-                          key={index}
-                          variant="outline"
-                          className="w-full text-left justify-start h-auto p-4 border-gray-200 hover:border-orange-300"
-                          onClick={() => handleQuizAnswer(index)}
-                        >
-                          <span className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-sm font-medium mr-3 flex-shrink-0">
-                            {String.fromCharCode(65 + index)}
-                          </span>
-                          {option}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center space-y-6">
-                  <div className="text-6xl mb-4">
-                    {quizScore === quizQuestions.length ? '🎉' : quizScore >= quizQuestions.length / 2 ? '👍' : '📚'}
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Quiz Voltooid!</h3>
-                    <p className="text-lg text-gray-600">
-                      Je hebt {quizScore} van de {quizQuestions.length} vragen goed!
-                    </p>
-                  </div>
-
-                  <div className={`p-4 rounded-lg ${
-                    quizScore === quizQuestions.length 
-                      ? 'bg-green-50 text-green-800' 
-                      : quizScore >= quizQuestions.length / 2 
-                        ? 'bg-yellow-50 text-yellow-800'
-                        : 'bg-red-50 text-red-800'
-                  }`}>
-                    {quizScore === quizQuestions.length && "Perfect! Je bent klaar om respectvol te reizen! 🌟"}
-                    {quizScore >= quizQuestions.length / 2 && quizScore < quizQuestions.length && "Goed bezig! Nog een paar tips om te onthouden. 💪"}
-                    {quizScore < quizQuestions.length / 2 && "Bekijk de culturele gidsen nog eens voor meer tips! 📖"}
-                  </div>
-
-                  <Button 
-                    onClick={resetQuiz}
-                    className="bg-orange-500 hover:bg-orange-600"
-                  >
-                    Opnieuw Proberen
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      {/* Selected Guide Detail Modal */}
-      {selectedGuide && (
-        <Card className="fixed inset-4 z-50 bg-white shadow-2xl overflow-auto animate-scale-in">
-          <CardHeader className="border-b border-orange-100">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-3xl">{selectedGuide.icon}</span>
-                  <div>
-                    <CardTitle className="text-2xl">{selectedGuide.title}</CardTitle>
-                    <p className="text-gray-600">{selectedGuide.region}</p>
-                  </div>
-                </div>
-                <Badge 
-                  variant={selectedGuide.importance === 'Zeer Hoog' ? 'destructive' : 'secondary'}
-                  className="text-sm"
-                >
-                  Belang: {selectedGuide.importance}
-                </Badge>
+          {quizActive && !quizComplete && (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">
+                  Vraag {currentQuestion + 1} van {quizQuestions.length}
+                </span>
+                <span className="text-sm text-gray-600">Score: {score}</span>
               </div>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => setSelectedGuide(null)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                ✕
+              
+              <h3 className="text-lg font-semibold">{quizQuestions[currentQuestion].question}</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {quizQuestions[currentQuestion].options.map((option, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    onClick={() => handleAnswer(index)}
+                    className="p-4 text-left justify-start border-orange-200 hover:bg-orange-50"
+                  >
+                    {option}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {quizComplete && (
+            <div className="text-center space-y-4">
+              <Trophy className="w-16 h-16 text-orange-500 mx-auto" />
+              <h3 className="text-xl font-bold">Quiz Voltooid!</h3>
+              <p className="text-lg">
+                Je score: {score} van {quizQuestions.length} 
+                ({Math.round((score / quizQuestions.length) * 100)}%)
+              </p>
+              <Button onClick={resetQuiz} variant="outline" className="border-orange-200">
+                Opnieuw Proberen
               </Button>
             </div>
-          </CardHeader>
+          )}
+        </CardContent>
+      </Card>
 
-          <CardContent className="p-6">
-            <div className="space-y-6">
-              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-                <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                  <Heart className="w-4 h-4" />
-                  Waarom dit belangrijk is
+      {/* Cultural Guides */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {filteredGuides.map((guide) => (
+          <Card key={guide.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-orange-100">
+            <CardHeader className="bg-gradient-to-r from-orange-100 to-amber-100">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl text-gray-900">{guide.location}</CardTitle>
+                <Badge variant="secondary" className="bg-white/80">
+                  {guide.continent}
+                </Badge>
+              </div>
+            </CardHeader>
+            
+            <CardContent className="p-6 space-y-6">
+              {/* Do's */}
+              <div>
+                <h4 className="flex items-center gap-2 font-semibold text-green-700 mb-3">
+                  <CheckCircle className="w-5 h-5" />
+                  Do's
                 </h4>
-                <p className="text-blue-700">{selectedGuide.context}</p>
+                <ul className="space-y-2">
+                  {guide.dos.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm">
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Do's */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-green-700 flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" />
-                    Dit WEL doen:
-                  </h4>
-                  <div className="space-y-2">
-                    {selectedGuide.dos.map((item, index) => (
-                      <div key={index} className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-green-800 text-sm">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              {/* Don'ts */}
+              <div>
+                <h4 className="flex items-center gap-2 font-semibold text-red-700 mb-3">
+                  <XCircle className="w-5 h-5" />
+                  Don'ts
+                </h4>
+                <ul className="space-y-2">
+                  {guide.donts.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm">
+                      <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-                {/* Don'ts */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-red-700 flex items-center gap-2">
-                    <XCircle className="w-5 h-5" />
-                    Dit NIET doen:
-                  </h4>
-                  <div className="space-y-2">
-                    {selectedGuide.donts.map((item, index) => (
-                      <div key={index} className="flex items-start gap-3 p-3 bg-red-50 rounded-lg">
-                        <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-red-800 text-sm">{item}</span>
-                      </div>
-                    ))}
-                  </div>
+              {/* Quick Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
+                <div>
+                  <h5 className="font-semibold text-gray-700 mb-1">Begroeting</h5>
+                  <p className="text-sm text-gray-600">{guide.greetings}</p>
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-700 mb-1">Fooien</h5>
+                  <p className="text-sm text-gray-600">{guide.tipping}</p>
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-700 mb-1">Kleding</h5>
+                  <p className="text-sm text-gray-600">{guide.clothing}</p>
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-700 mb-1">Taboes</h5>
+                  <p className="text-sm text-gray-600">{guide.taboos}</p>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-      {/* Background Overlay for Modal */}
-      {selectedGuide && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40"
-          onClick={() => setSelectedGuide(null)}
-        />
+      {/* No Results */}
+      {filteredGuides.length === 0 && (
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">🌍</div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            Geen culturele gidsen gevonden
+          </h3>
+          <p className="text-gray-600">
+            Er zijn nog geen culturele richtlijnen voor deze locatie. Pas je filters aan of kom later terug.
+          </p>
+        </div>
       )}
     </div>
   );

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MapPin, Users, DollarSign, AlertTriangle, Plus, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,7 @@ import MapView from '@/components/MapView';
 import LocalStories from '@/components/LocalStories';
 import TravelTips from '@/components/TravelTips';
 import CulturalGuide from '@/components/CulturalGuide';
+import LoginDialog from '@/components/LoginDialog';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('map');
@@ -51,14 +51,17 @@ const Index = () => {
                 <p className="text-sm text-gray-600">Respectvol Reizen met Lokale Verhalen</p>
               </div>
             </div>
-            <Button 
-              variant="outline" 
-              className="border-orange-200 text-orange-700 hover:bg-orange-50"
-              onClick={() => navigate('/verhaal-delen')}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Verhaal Delen
-            </Button>
+            <div className="flex items-center gap-3">
+              <LoginDialog />
+              <Button 
+                variant="outline" 
+                className="border-orange-200 text-orange-700 hover:bg-orange-50"
+                onClick={() => navigate('/verhaal-delen')}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Verhaal Delen
+              </Button>
+            </div>
           </div>
         </div>
       </header>
