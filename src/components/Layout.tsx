@@ -172,28 +172,27 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Footer */}
       {shouldShowFooter && (
-        <footer className="bg-white border-t py-6">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-8">
-                <span className="text-sm text-gray-600">
-                  Yaro helpt reizigers om steden te ontdekken door de ogen van locals.
-                </span>
-                <nav className="flex items-center space-x-4 text-sm text-gray-600">
-                  <Link to="/kaart" className="hover:text-primary">Kaart</Link>
-                  <Link to="/verhalen" className="hover:text-primary">Verhalen</Link>
-                  <Link to="/budget-tips" className="hover:text-primary">Budget & Tips</Link>
-                  <Link to="/dos-and-donts" className="hover:text-primary">Do's & Don'ts</Link>
-                </nav>
+        <footer className="bg-gradient-to-t from-white via-orange-50 to-orange-100 border-t border-orange-100 mt-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+              <div className="flex-1 min-w-[160px]">
+                <span className="block text-sm font-semibold text-primary mb-1">Yaro</span>
+                <span className="text-xs text-gray-500">Helpt reizigers om steden te ontdekken door de ogen van locals.</span>
               </div>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600">
-                  Contact:{' '}
-                  <a href="mailto:info@yaro.nl" className="text-primary hover:text-primary/90">
-                    info@yaro.nl
-                  </a>
+              <nav className="flex-1 min-w-[160px] flex flex-col md:items-center">
+                <ul className="flex flex-col md:flex-row gap-1 md:gap-4 text-xs text-gray-600">
+                  <li><Link to="/kaart" className="hover:text-primary transition-colors">Kaart</Link></li>
+                  <li><Link to="/verhalen" className="hover:text-primary transition-colors">Verhalen</Link></li>
+                  <li><Link to="/budget-tips" className="hover:text-primary transition-colors">Budget & Tips</Link></li>
+                  <li><Link to="/dos-and-donts" className="hover:text-primary transition-colors">Do's & Don'ts</Link></li>
+                </ul>
+              </nav>
+              <div className="flex-1 min-w-[160px] flex flex-col items-start md:items-end gap-1">
+                <span className="text-xs text-gray-500">
+                  <span className="hidden md:inline">Contact: </span>
+                  <a href="mailto:info@yaro.nl" className="text-primary hover:text-primary/90 underline underline-offset-2">info@yaro.nl</a>
                 </span>
-                <span className="text-sm text-gray-600">&copy; {new Date().getFullYear()} Yaro</span>
+                <span className="text-[11px] text-gray-400">&copy; {new Date().getFullYear()} Yaro</span>
               </div>
             </div>
           </div>

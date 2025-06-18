@@ -20,13 +20,26 @@ interface Story {
 }
 
 const getImageUrl = (title: string) => {
-  // Map titles to placeholder images - in a real app, these would come from your API
+  // Map titles to local images per stad
   const imageMap: { [key: string]: string } = {
-    'De verborgen grachten van Amsterdam': 'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=800&h=600',
-    'Fietsen door Utrecht als een local': 'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=800&h=600',
-    'Tapas eten zoals een echte Barcelonees': 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?auto=format&fit=crop&w=800&h=600',
-    'Flamenco in de wijken van Sevilla': 'https://images.unsplash.com/photo-1508267176112-3ee843880737?auto=format&fit=crop&w=800&h=600',
-    'Boulangeries van Montmartre': 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&h=600'
+    'De verborgen grachten van Amsterdam': '/images/amsterdam1.jpg',
+    'Fietsen door Utrecht als een local': '/images/utrecht1.jpg',
+    'Tapas eten zoals een echte Barcelonees': '/images/barcelona1.jpg',
+    'Flamenco in de wijken van Sevilla': '/images/sevilla1.jpg',
+    'Boulangeries van Montmartre': 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&h=600',
+    'Venetië zonder de massa\'s': 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&h=600',
+    'Tempeletiquette in Kyoto': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&h=600',
+    'Sushi etiquette in Tokyo': 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&h=600',
+    'Tempels bezoeken in Bangkok': 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&h=600',
+    'Straatvoedsel in Mumbai': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&h=600',
+    'Onderhandelen op de markt in Marrakech': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&h=600',
+    'Theecultuur in Fez': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=800&h=600',
+    'Township tours in Kaapstad': 'https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=800&h=600',
+    'Jazz in New Orleans': 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&h=600',
+    'First Nations cultuur in Vancouver': 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&h=600',
+    'Carnaval in Rio de Janeiro': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&h=600',
+    'Coca bladeren in Cusco': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&h=600',
+    'Aboriginal cultuur in Sydney': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&h=600',
   };
   
   return imageMap[title] || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&h=600';
