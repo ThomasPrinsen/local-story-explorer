@@ -1,0 +1,110 @@
+[
+  {
+    "title": "De verborgen grachten van Amsterdam",
+    "description": "Ontdek rustige grachten en verborgen hofjes buiten de gebaande paden.",
+    "lat": 52.3702,
+    "lng": 4.8952
+  },
+  {
+    "title": "Fietsen door Utrecht als een local",
+    "description": "Ervaar de stad op twee wielen zoals de locals dat doen.",
+    "lat": 52.0907,
+    "lng": 5.1214
+  },
+  {
+    "title": "Tapas eten zoals een echte Barcelonees",
+    "description": "Bezoek kleine tapasbars die populair zijn bij locals.",
+    "lat": 41.3874,
+    "lng": 2.1686
+  },
+  {
+    "title": "Flamenco in de wijken van Sevilla",
+    "description": "Voel de passie van flamenco in intieme lokale cafés.",
+    "lat": 37.3891,
+    "lng": -5.9845
+  },
+  {
+    "title": "Boulangeries van Montmartre",
+    "description": "Smaak de echte Parijse sfeer in de smalle straatjes van Montmartre.",
+    "lat": 48.8867,
+    "lng": 2.3431
+  },
+  {
+    "title": "Venetië zonder de massa's",
+    "description": "Verken stille pleinen en onbekende steegjes in het echte Venetië.",
+    "lat": 45.4408,
+    "lng": 12.3155
+  },
+  {
+    "title": "Tempeletiquette in Kyoto",
+    "description": "Leer hoe je respectvol een Japanse tempel bezoekt.",
+    "lat": 35.0116,
+    "lng": 135.7681
+  },
+  {
+    "title": "Sushi etiquette in Tokyo",
+    "description": "Doe sushi zoals het hoort: tips van lokale chefs.",
+    "lat": 35.6895,
+    "lng": 139.6917
+  },
+  {
+    "title": "Tempels bezoeken in Bangkok",
+    "description": "Welke kleding is gepast en hoe toon je respect bij Thaise tempels.",
+    "lat": 13.7563,
+    "lng": 100.5018
+  },
+  {
+    "title": "Straatvoedsel in Mumbai",
+    "description": "Proef lokale snacks op plekken waar locals graag komen.",
+    "lat": 19.076,
+    "lng": 72.8777
+  },
+  {
+    "title": "Onderhandelen op de markt in Marrakech",
+    "description": "Leer hoe je op een vriendelijke manier een goede prijs krijgt.",
+    "lat": 31.6295,
+    "lng": -7.9811
+  },
+  {
+    "title": "Theecultuur in Fez",
+    "description": "Ervaar de gastvrijheid van Marokkaanse muntthee-ceremonies.",
+    "lat": 34.0181,
+    "lng": -5.0078
+  },
+  {
+    "title": "Township tours in Kaapstad",
+    "description": "Ontmoet bewoners en leer over het dagelijks leven in townships.",
+    "lat": -33.9249,
+    "lng": 18.4241
+  },
+  {
+    "title": "Jazz in New Orleans",
+    "description": "Waar je de beste live jazzoptredens vindt volgens locals.",
+    "lat": 29.9511,
+    "lng": -90.0715
+  },
+  {
+    "title": "First Nations cultuur in Vancouver",
+    "description": "Leer over de inheemse gemeenschappen en hun tradities.",
+    "lat": 49.2827,
+    "lng": -123.1207
+  },
+  {
+    "title": "Carnaval in Rio de Janeiro",
+    "description": "Ontdek de betekenis van carnaval door de ogen van bewoners.",
+    "lat": -22.9068,
+    "lng": -43.1729
+  },
+  {
+    "title": "Coca bladeren in Cusco",
+    "description": "Wat coca betekent in de Andes, uitgelegd door locals.",
+    "lat": -13.5319,
+    "lng": -71.9675
+  },
+  {
+    "title": "Aboriginal cultuur in Sydney",
+    "description": "Verhalen over spiritualiteit, land en tradities van de eerste bewoners.",
+    "lat": -33.8688,
+    "lng": 151.2093
+  }
+]

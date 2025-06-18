@@ -1,442 +1,177 @@
+import React, { useState, useEffect } from 'react';
+import { Search, Filter } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Card } from '@/components/ui/card';
+import { useNavigate } from 'react-router-dom';
+import storiesData from '../../stories.json';
 
-import React, { useState } from 'react';
-import { Play, Volume2, Heart, MessageCircle, Share2, User } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import FilterMenu from './FilterMenu';
+interface Story {
+  title: string;
+  description: string;
+  lat: number;
+  lng: number;
+}
+
+const getImageUrl = (title: string) => {
+  // Map titles to placeholder images - in a real app, these would come from your API
+  const imageMap: { [key: string]: string } = {
+    'De verborgen grachten van Amsterdam': 'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=800&h=600',
+    'Fietsen door Utrecht als een local': 'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=800&h=600',
+    'Tapas eten zoals een echte Barcelonees': 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?auto=format&fit=crop&w=800&h=600',
+    'Flamenco in de wijken van Sevilla': 'https://images.unsplash.com/photo-1508267176112-3ee843880737?auto=format&fit=crop&w=800&h=600',
+    'Boulangeries van Montmartre': 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&h=600'
+  };
+  
+  return imageMap[title] || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&h=600';
+};
+
+const getLocation = (lat: number, lng: number) => {
+  // This is a simplified version. In a real app, you'd use reverse geocoding
+  const locations: { [key: string]: string } = {
+    '52.3702,4.8952': 'Amsterdam, Nederland',
+    '52.0907,5.1214': 'Utrecht, Nederland',
+    '41.3874,2.1686': 'Barcelona, Spanje',
+    '37.3891,-5.9845': 'Sevilla, Spanje',
+    '48.8867,2.3431': 'Parijs, Frankrijk',
+    '45.4408,12.3155': 'Venetië, Italië',
+    '35.0116,135.7681': 'Kyoto, Japan',
+    '35.6895,139.6917': 'Tokyo, Japan',
+    '13.7563,100.5018': 'Bangkok, Thailand',
+    '19.076,72.8777': 'Mumbai, India',
+    '31.6295,-7.9811': 'Marrakech, Marokko',
+    '34.0181,-5.0078': 'Fez, Marokko',
+    '-33.9249,18.4241': 'Kaapstad, Zuid-Afrika',
+    '29.9511,-90.0715': 'New Orleans, Verenigde Staten',
+    '49.2827,-123.1207': 'Vancouver, Canada',
+    '-22.9068,-43.1729': 'Rio de Janeiro, Brazilië',
+    '-13.5319,-71.9675': 'Cusco, Peru',
+    '-33.8688,151.2093': 'Sydney, Australië'
+  };
+  
+  return locations[`${lat},${lng}`] || 'Onbekende locatie';
+};
+
+const getContinent = (lat: number, lng: number) => {
+  // Simplified continent detection based on coordinates
+  if (lat > 35 && lng > -30 && lng < 40) return 'Europa';
+  if (lat > 0 && lng > 60) return 'Azië';
+  if (lat > 0 && lng < -30) return 'Noord-Amerika';
+  if (lat < 0 && lng < -30) return 'Zuid-Amerika';
+  if (lat < 0 && lng > 100) return 'Oceanië';
+  if (lat < 35 && lat > -35 && lng > -20 && lng < 60) return 'Afrika';
+  return 'Onbekend';
+};
 
 const LocalStories = () => {
-  const [filters, setFilters] = useState({ continent: '', country: '', city: '' });
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedContinent, setSelectedContinent] = useState('all');
+  const [filteredStories, setFilteredStories] = useState<Story[]>(storiesData);
 
-  const stories = [
-    // Europa - Nederland
-    {
-      id: 1,
-      title: 'De verborgen grachten van Amsterdam',
-      author: 'Emma van der Berg',
-      location: 'Amsterdam, Nederland',
-      continent: 'Europa',
-      country: 'Nederland',
-      city: 'Amsterdam',
-      avatar: '👩‍🎨',
-      preview: 'Ontdek de rustige grachten waar toeristen nooit komen. Ik deel mijn favoriete plekjes voor een authentieke Amsterdam-ervaring.',
-      duration: '4:23',
-      likes: 156,
-      comments: 23,
-      type: 'video',
-      tags: ['verborgen plekken', 'grachten', 'fotografie']
-    },
-    {
-      id: 2,
-      title: 'Fietsen door Utrecht als een local',
-      author: 'Pieter Janssen',
-      location: 'Utrecht, Nederland',
-      continent: 'Europa',
-      country: 'Nederland',
-      city: 'Utrecht',
-      avatar: '🚴‍♂️',
-      preview: 'Vermijd de drukte en ontdek de mooiste fietsroutes door Utrecht. Van geheime hofjes tot de beste koffieplekjes.',
-      duration: '5:12',
-      likes: 98,
-      comments: 15,
-      type: 'video',
-      tags: ['fietsen', 'routes', 'koffie']
-    },
-    // Europa - Spanje
-    {
-      id: 3,
-      title: 'Tapas eten zoals een echte Barcelonees',
-      author: 'Carlos Rodriguez',
-      location: 'Barcelona, Spanje',
-      continent: 'Europa',
-      country: 'Spanje',
-      city: 'Barcelona',
-      avatar: '👨‍🍳',
-      preview: 'Vergeet de toeristische tapas bars! Ik laat je zien waar locals werkelijk eten en hoe je respectvol omgaat met onze eetcultuur.',
-      duration: '6:15',
-      likes: 289,
-      comments: 45,
-      type: 'video',
-      tags: ['eten', 'cultuur', 'locals']
-    },
-    {
-      id: 4,
-      title: 'Flamenco in de wijken van Sevilla',
-      author: 'María González',
-      location: 'Sevilla, Spanje',
-      continent: 'Europa',
-      country: 'Spanje',
-      city: 'Sevilla',
-      avatar: '💃',
-      preview: 'Echte flamenco vind je niet in shows voor toeristen. Kom mee naar de wijken waar deze passie echt leeft.',
-      duration: '7:30',
-      likes: 221,
-      comments: 38,
-      type: 'video',
-      tags: ['flamenco', 'cultuur', 'muziek']
-    },
-    // Europa - Frankrijk
-    {
-      id: 5,
-      title: 'Boulangeries van Montmartre',
-      author: 'Sophie Dubois',
-      location: 'Parijs, Frankrijk',
-      continent: 'Europa',
-      country: 'Frankrijk',
-      city: 'Parijs',
-      avatar: '🥖',
-      preview: 'De beste croissants van Parijs vind je niet bij de Eiffeltoren. Ontdek de authentieke boulangeries van Montmartre.',
-      duration: '4:45',
-      likes: 167,
-      comments: 29,
-      type: 'audio',
-      tags: ['brood', 'eten', 'tradities']
-    },
-    // Europa - Italië
-    {
-      id: 6,
-      title: 'Venetië zonder de massa\'s',
-      author: 'Marco Rossini',
-      location: 'Venetië, Italië',
-      continent: 'Europa',
-      country: 'Italië',
-      city: 'Venetië',
-      avatar: '🛶',
-      preview: 'Vroeg opstaan loont in Venetië. Ik toon je hoe je onze stad kunt ervaren voordat de cruiseschepen arriveren.',
-      duration: '6:00',
-      likes: 312,
-      comments: 52,
-      type: 'video',
-      tags: ['vroeg opstaan', 'rustige plekken', 'fotografie']
-    },
-    // Azië - Japan
-    {
-      id: 7,
-      title: 'Tempeletiquette in Kyoto',
-      author: 'Yuki Tanaka',
-      location: 'Kyoto, Japan',
-      continent: 'Azië',
-      country: 'Japan',
-      city: 'Kyoto',
-      avatar: '🧘‍♀️',
-      preview: 'Hoe bezoek je onze heilige tempels met respect? Een lokale gids over do\'s en don\'ts bij tempelbezoeken.',
-      duration: '3:45',
-      likes: 134,
-      comments: 18,
-      type: 'audio',
-      tags: ['cultuur', 'religie', 'respect']
-    },
-    {
-      id: 8,
-      title: 'Sushi etiquette in Tokyo',
-      author: 'Hiroshi Sato',
-      location: 'Tokyo, Japan',
-      continent: 'Azië',
-      country: 'Japan',
-      city: 'Tokyo',
-      avatar: '🍣',
-      preview: 'Leer hoe je respectvol sushi eet in een traditioneel restaurant. Van wasabi gebruik tot het betalen van de rekening.',
-      duration: '5:20',
-      likes: 198,
-      comments: 31,
-      type: 'video',
-      tags: ['sushi', 'etiquette', 'restaurants']
-    },
-    // Azië - Thailand
-    {
-      id: 9,
-      title: 'Tempels bezoeken in Bangkok',
-      author: 'Somchai Patel',
-      location: 'Bangkok, Thailand',
-      continent: 'Azië',
-      country: 'Thailand',
-      city: 'Bangkok',
-      avatar: '🙏',
-      preview: 'Kledingregels, gedrag en donaties bij tempelbezoeken. Respectvol genieten van onze prachtige tempels.',
-      duration: '4:30',
-      likes: 145,
-      comments: 22,
-      type: 'video',
-      tags: ['tempels', 'respect', 'kleding']
-    },
-    // Azië - India
-    {
-      id: 10,
-      title: 'Straatvoedsel in Mumbai',
-      author: 'Priya Sharma',
-      location: 'Mumbai, India',
-      continent: 'Azië',
-      country: 'India',
-      city: 'Mumbai',
-      avatar: '🍛',
-      preview: 'Veilig en lekker straatvoedsel in Mumbai. Welke standjes je kunt vertrouwen en hoe je bestelt als toerist.',
-      duration: '6:45',
-      likes: 234,
-      comments: 41,
-      type: 'video',
-      tags: ['straatvoedsel', 'veiligheid', 'lokaal eten']
-    },
-    // Afrika - Marokko
-    {
-      id: 11,
-      title: 'Onderhandelen op de markt in Marrakech',
-      author: 'Ahmed Ben Ali',
-      location: 'Marrakech, Marokko',
-      continent: 'Afrika',
-      country: 'Marokko',
-      city: 'Marrakech',
-      avatar: '🧙‍♂️',
-      preview: 'Onderhandelen is een kunst en onderdeel van onze cultuur. Leer hoe je respectvol handelt op onze souks.',
-      duration: '5:30',
-      likes: 198,
-      comments: 34,
-      type: 'video',
-      tags: ['markt', 'onderhandelen', 'cultuur']
-    },
-    {
-      id: 12,
-      title: 'Thee cultuur in Fez',
-      author: 'Fatima El Mansouri',
-      location: 'Fez, Marokko',
-      continent: 'Afrika',
-      country: 'Marokko',
-      city: 'Fez',
-      avatar: '🫖',
-      preview: 'De kunst van het thee drinken in Marokko. Wanneer je accepteert, hoe je drinkt en wat het betekent voor onze gastvrijheid.',
-      duration: '4:15',
-      likes: 156,
-      comments: 28,
-      type: 'audio',
-      tags: ['thee', 'tradities', 'gastvrijheid']
-    },
-    // Afrika - Zuid-Afrika
-    {
-      id: 13,
-      title: 'Township tours in Kaapstad',
-      author: 'Mandla Ndlovu',
-      location: 'Kaapstad, Zuid-Afrika',
-      continent: 'Afrika',
-      country: 'Zuid-Afrika',
-      city: 'Kaapstad',
-      avatar: '🏘️',
-      preview: 'Respectvolle township bezoeken. Hoe je onze gemeenschappen bezoekt zonder voyeurisme, maar met waardering.',
-      duration: '7:00',
-      likes: 267,
-      comments: 45,
-      type: 'video',
-      tags: ['townships', 'respect', 'gemeenschap']
-    },
-    // Noord-Amerika - VS
-    {
-      id: 14,
-      title: 'Jazz in New Orleans',
-      author: 'Louis Jackson',
-      location: 'New Orleans, Verenigde Staten',
-      continent: 'Noord-Amerika',
-      country: 'Verenigde Staten',
-      city: 'New Orleans',
-      avatar: '🎷',
-      preview: 'Echte jazz experience in de French Quarter. Waar locals naar muziek luisteren en hoe je de cultuur respecteert.',
-      duration: '5:45',
-      likes: 189,
-      comments: 33,
-      type: 'video',
-      tags: ['jazz', 'muziek', 'cultuur']
-    },
-    // Noord-Amerika - Canada
-    {
-      id: 15,
-      title: 'First Nations cultuur in Vancouver',
-      author: 'Sarah Littlewolf',
-      location: 'Vancouver, Canada',
-      continent: 'Noord-Amerika',
-      country: 'Canada',
-      city: 'Vancouver',
-      avatar: '🪶',
-      preview: 'Leer over onze First Nations erfgoed. Respectvolle manieren om onze cultuur te leren kennen en waarderen.',
-      duration: '6:30',
-      likes: 201,
-      comments: 29,
-      type: 'video',
-      tags: ['first nations', 'erfgoed', 'respect']
-    },
-    // Zuid-Amerika - Brazilië
-    {
-      id: 16,
-      title: 'Carnaval in Rio de Janeiro',
-      author: 'Isabella Santos',
-      location: 'Rio de Janeiro, Brazilië',
-      continent: 'Zuid-Amerika',
-      country: 'Brazilië',
-      city: 'Rio de Janeiro',
-      avatar: '🎭',
-      preview: 'Carnaval is meer dan een feest. Leer over de geschiedenis, betekenis en hoe je respectvol meedoet.',
-      duration: '8:00',
-      likes: 345,
-      comments: 67,
-      type: 'video',
-      tags: ['carnaval', 'historie', 'cultuur']
-    },
-    // Zuid-Amerika - Peru
-    {
-      id: 17,
-      title: 'Coca bladeren in Cusco',
-      author: 'Carlos Quispe',
-      location: 'Cusco, Peru',
-      continent: 'Zuid-Amerika',
-      country: 'Peru',
-      city: 'Cusco',
-      avatar: '🌿',
-      preview: 'De heilige coca plant in onze Andescultuur. Waarom het belangrijk is en hoe toeristen dit respecteren.',
-      duration: '4:50',
-      likes: 178,
-      comments: 25,
-      type: 'audio',
-      tags: ['coca', 'andes', 'tradities']
-    },
-    // Oceanië - Australië
-    {
-      id: 18,
-      title: 'Aboriginal cultuur in Sydney',
-      author: 'David Yamirra',
-      location: 'Sydney, Australië',
-      continent: 'Oceanië',
-      country: 'Australië',
-      city: 'Sydney',
-      avatar: '🪃',
-      preview: 'Onze Aboriginal geschiedenis en cultuur. Respectvolle manieren om te leren over de oudste beschaving ter wereld.',
-      duration: '7:15',
-      likes: 223,
-      comments: 38,
-      type: 'video',
-      tags: ['aboriginal', 'geschiedenis', 'respect']
-    }
-  ];
+  useEffect(() => {
+    const filtered = storiesData.filter(story => {
+      const matchesSearch = 
+        story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        story.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        getLocation(story.lat, story.lng).toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const continent = getContinent(story.lat, story.lng);
+      const matchesContinent = selectedContinent === 'all' || continent === selectedContinent;
 
-  const filteredStories = stories.filter(story => {
-    if (filters.city && story.city !== filters.city) return false;
-    if (filters.country && story.country !== filters.country) return false;
-    if (filters.continent && story.continent !== filters.continent) return false;
-    return true;
-  });
+      return matchesSearch && matchesContinent;
+    });
 
-  const handleFilterChange = (newFilters: { continent: string; country: string; city: string }) => {
-    setFilters(newFilters);
-  };
+    setFilteredStories(filtered);
+  }, [searchQuery, selectedContinent]);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold text-gray-900">Verhalen van Locals</h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Authentieke verhalen, tips en inzichten van lokale bewoners over hun stad en cultuur.
-        </p>
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      {/* Search and Filter Section */}
+      <div className="mb-8 bg-white rounded-lg shadow-sm border p-4">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <div className="flex items-center gap-2">
+            <Filter className="w-5 h-5 text-gray-500" />
+            <span className="text-sm font-medium text-gray-700">Filters:</span>
+          </div>
+          
+          <div className="flex flex-1 gap-4 flex-col sm:flex-row w-full sm:w-auto">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <Input
+                type="text"
+                placeholder="Zoek op locatie, activiteit of thema..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 w-full border-gray-200"
+              />
+            </div>
+            
+            <Select value={selectedContinent} onValueChange={setSelectedContinent}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue placeholder="Continent" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Alle continenten</SelectItem>
+                <SelectItem value="Europa">Europa</SelectItem>
+                <SelectItem value="Azië">Azië</SelectItem>
+                <SelectItem value="Afrika">Afrika</SelectItem>
+                <SelectItem value="Noord-Amerika">Noord-Amerika</SelectItem>
+                <SelectItem value="Zuid-Amerika">Zuid-Amerika</SelectItem>
+                <SelectItem value="Oceanië">Oceanië</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </div>
 
-      {/* Filter Menu */}
-      <FilterMenu onFilterChange={handleFilterChange} />
-
       {/* Stories Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredStories.map((story) => (
-          <Card key={story.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border-orange-100">
-            <CardContent className="p-0">
-              {/* Story Header */}
-              <div className="relative bg-gradient-to-r from-orange-100 to-amber-100 p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-xl shadow-sm">
-                      {story.avatar}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 text-lg">{story.title}</h3>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <User className="w-3 h-3" />
-                        <span>{story.author}</span>
-                        <span>•</span>
-                        <span>{story.location}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {story.type === 'video' ? '📹' : '🎧'} {story.duration}
-                  </Badge>
+          <Card 
+            key={story.title} 
+            className="overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow duration-300"
+            onClick={() => navigate(`/verhaal/${story.title.toLowerCase().replace(/\s+/g, '-')}`)}
+          >
+            <div className="relative aspect-[16/9]">
+              <img
+                src={getImageUrl(story.title)}
+                alt={story.title}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+              <div className="absolute bottom-0 p-4 text-white">
+                <h3 className="text-xl font-semibold mb-2 group-hover:text-primary-foreground transition-colors">
+                  {story.title}
+                </h3>
+                <p className="text-sm text-gray-100 line-clamp-2 mb-2">
+                  {story.description}
+                </p>
+                <div className="flex items-center text-sm text-gray-200">
+                  <span>{getLocation(story.lat, story.lng)}</span>
                 </div>
               </div>
-
-              {/* Story Content */}
-              <div className="p-6">
-                <p className="text-gray-700 mb-4 line-clamp-3">{story.preview}</p>
-                
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {story.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs border-orange-200 text-orange-700">
-                      #{tag}
-                    </Badge>
-                  ))}
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-2">
-                    <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
-                      <Play className="w-4 h-4 mr-2" />
-                      {story.type === 'video' ? 'Bekijk' : 'Beluister'}
-                    </Button>
-                    {story.type === 'video' && (
-                      <Button variant="outline" size="sm" className="border-orange-200">
-                        <Volume2 className="w-4 h-4 mr-2" />
-                        Audio
-                      </Button>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Heart className="w-4 h-4" />
-                      <span>{story.likes}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <MessageCircle className="w-4 h-4" />
-                      <span>{story.comments}</span>
-                    </div>
-                    <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700 p-1">
-                      <Share2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>
 
-      {/* No Results */}
       {filteredStories.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">🗺️</div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            Geen verhalen gevonden
-          </h3>
-          <p className="text-gray-600">
-            Er zijn nog geen verhalen voor deze locatie. Pas je filters aan of kom later terug.
+        <div className="text-center py-12 bg-gray-50 rounded-lg">
+          <p className="text-lg text-gray-600">
+            Geen verhalen gevonden die aan je zoekcriteria voldoen.
+          </p>
+          <p className="text-sm text-gray-500 mt-2">
+            Probeer andere zoektermen of pas je filters aan.
           </p>
         </div>
       )}
-
-      {/* Call to Action */}
-      <Card className="text-center p-8 bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200">
-        <h3 className="text-xl font-bold text-gray-900 mb-2">Heb jij ook een verhaal?</h3>
-        <p className="text-gray-600 mb-4">
-          Deel jouw lokale kennis en help reizigers jouw stad beter begrijpen.
-        </p>
-        <Button className="bg-orange-500 hover:bg-orange-600">
-          Verhaal Delen
-        </Button>
-      </Card>
     </div>
   );
 };
