@@ -1,73 +1,260 @@
-# Welcome to your Lovable project
+# Local Story Explorer 🌍
 
-## Project info
+Een interactieve reisapplicatie die lokale verhalen en ervaringen toont op een interactieve kaart. Gebruikers kunnen verhalen van locals ontdekken, door verschillende steden browsen, en praktische reistips vinden voor authentieke ervaringen wereldwijd.
 
-**URL**: https://lovable.dev/projects/30fef96e-5230-419e-ba37-d5fa72c77daa
+## ✨ Features
 
-## How can I edit this code?
+### 🗺️ Interactieve Kaart
+- **OpenStreetMap integratie** met Leaflet.js
+- **Vloeiende animaties** bij het inzoomen en verplaatsen
+- **Klikbare markers** om verhalen te ontdekken
+- **Wereldwijde dekking** met verhalen van alle continenten
+- **Responsive design** voor desktop en mobiel
 
-There are several ways of editing your application.
+### 📚 Lokale Verhalen
+- **Authentieke ervaringen** van locals wereldwijd
+- **Gecategoriseerde verhalen** per continent:
+  - 🌍 **Europa** - Verborgen grachten, fietsroutes, lokale eetcultuur
+  - 🌏 **Azië** - Tempel etiquette, sushi tradities, straatvoedsel
+  - 🌍 **Afrika** - Markt onderhandelen, theecultuur, township tours
+  - 🌎 **Amerika** - Jazz cultuur, First Nations tradities, carnaval
+  - 🌏 **Oceanië** - Aboriginal cultuur, lokale gebruiken
 
-**Use Lovable**
+### 🔍 Zoeken & Filteren
+- **Intelligente zoekfunctie** op locatie, activiteit of thema
+- **Continent filter** voor gerichte ontdekking
+- **Real-time filtering** met instant resultaten
+- **Visuele feedback** met hover effecten
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/30fef96e-5230-419e-ba37-d5fa72c77daa) and start prompting.
+### 💡 Praktische Tips
+- **Budget tips** voor voordelige reizen
+- **Do's & Don'ts** per bestemming
+- **Lokale etiquette** en culturele gebruiken
+- **Verborgen pareltjes** buiten de gebaande paden
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🎨 Moderne UI/UX
+- **Responsive design** voor alle apparaten
+- **Shadcn/ui componenten** voor consistente styling
+- **Tailwind CSS** voor moderne styling
+- **Smooth animaties** en hover effecten
+- **Intuïtieve navigatie** met duidelijke feedback
 
-**Use your preferred IDE**
+## 🚀 Installatie
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Vereisten
+- Node.js (versie 18 of hoger)
+- npm, yarn, of bun package manager
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Stappen
 
-Follow these steps:
-
+**Clone de repository**
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+git clone https://github.com/your-username/local-story-explorer.git
+cd local-story-explorer
 ```
 
-**Edit a file directly in GitHub**
+**Installeer dependencies**
+```sh
+npm install
+# of
+yarn install
+# of
+bun install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+**Start de development server**
+```sh
+npm run dev
+# of
+yarn dev
+# of
+bun dev
+```
 
-**Use GitHub Codespaces**
+**Open de applicatie**
+- Ga naar `http://localhost:5173` in je browser
+- De applicatie laadt standaard met een overzicht van alle verhalen
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📖 Gebruik
 
-## What technologies are used for this project?
+### Basis Navigatie
+- **Verhalen bekijken**: Ga naar de "Verhalen" pagina voor een overzicht
+- **Kaart verkennen**: Gebruik de "Kaart" pagina voor geografische ontdekking
+- **Tips vinden**: Bekijk "Budget & Tips" en "Do's & Don'ts" voor praktische informatie
+- **Verhaal delen**: Voeg je eigen lokale ervaring toe via "Verhaal Delen"
 
-This project is built with:
+### Functies
+- **Zoekbalk**: Type een locatie, activiteit of thema en druk op Enter
+- **Continent filter**: Selecteer een continent voor gerichte verhalen
+- **Kaart markers**: Klik op markers voor verhaal details
+- **Verhaal details**: Bekijk volledige verhalen met afbeeldingen en beschrijvingen
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🏗️ Project Structuur
 
-## How can I deploy this project?
+```
+local-story-explorer/
+├── src/
+│   ├── components/
+│   │   ├── Layout.tsx              # Hoofdnavigatie en layout
+│   │   ├── LocalStories.tsx        # Verhalen overzicht
+│   │   ├── MapView.tsx             # Interactieve kaart
+│   │   ├── StoryDetail.tsx         # Verhaal detail pagina
+│   │   ├── CulturalGuide.tsx       # Culturele gids
+│   │   ├── TravelTips.tsx          # Reistips
+│   │   ├── FilterMenu.tsx          # Zoek en filter componenten
+│   │   ├── LoginDialog.tsx         # Login functionaliteit
+│   │   └── ui/                     # Shadcn/ui componenten
+│   ├── pages/
+│   │   ├── Index.tsx               # Hoofdpagina
+│   │   ├── BudgetTips.tsx          # Budget tips pagina
+│   │   ├── DosAndDonts.tsx         # Do's & Don'ts pagina
+│   │   ├── VerhaalDelen.tsx        # Verhaal delen pagina
+│   │   └── NotFound.tsx            # 404 pagina
+│   ├── hooks/
+│   │   ├── use-mobile.tsx          # Mobiele detectie
+│   │   └── use-toast.ts            # Toast notificaties
+│   ├── lib/
+│   │   └── utils.ts                # Utility functies
+│   └── styles/
+│       └── globals.css             # Globale styling
+├── public/
+│   └── images/                     # Lokale afbeeldingen
+├── stories.json                    # Verhalen data
+└── package.json                    # Dependencies en scripts
+```
 
-Simply open [Lovable](https://lovable.dev/projects/30fef96e-5230-419e-ba37-d5fa72c77daa) and click on Share -> Publish.
+## 🔧 Technische Details
 
-## Can I connect a custom domain to my Lovable project?
+### Frontend Stack
+- **React 18** met TypeScript
+- **Vite** voor snelle development en build
+- **Tailwind CSS** voor styling
+- **Shadcn/ui** voor UI componenten
+- **Lucide React** voor iconen
 
-Yes, you can!
+### Kaart & Locatie
+- **Leaflet.js** voor interactieve kaarten
+- **OpenStreetMap** voor kaart tiles
+- **React Leaflet** voor React integratie
+- **Custom markers** met verhaal informatie
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### State Management
+- **React Hooks** (useState, useEffect, useCallback)
+- **React Router** voor navigatie
+- **TanStack Query** voor data fetching
+- **Local state** voor component data
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Data Structuur
+- **JSON-based** verhalen database
+- **Geografische coördinaten** voor kaart integratie
+- **Categorieën** per continent en thema
+- **Afbeeldingen** voor visuele verhalen
+
+## 🎨 Customization
+
+### Nieuwe Verhalen Toevoegen
+Voeg nieuwe verhalen toe in `stories.json`:
+
+```json
+{
+  "title": "Jouw verhaal titel",
+  "description": "Beschrijving van de lokale ervaring",
+  "lat": 52.3702,
+  "lng": 4.8952
+}
+```
+
+### Kaart Styling
+Pas de kaart aan in `src/components/MapView.tsx`:
+
+```typescript
+// Verander kaart tiles
+<TileLayer
+  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+/>
+```
+
+### Nieuwe Pagina's
+Voeg nieuwe pagina's toe in `src/pages/` en registreer ze in `src/App.tsx`:
+
+```typescript
+<Route path="/nieuwe-pagina" element={<NieuwePagina />} />
+```
+
+## 🚀 Deployment
+
+### Build voor Productie
+```sh
+npm run build
+# of
+yarn build
+# of
+bun build
+```
+
+### Deploy naar Vercel
+1. Push code naar GitHub
+2. Verbind repository met Vercel
+3. Deploy automatisch
+
+### Deploy naar Netlify
+1. Build de applicatie
+2. Upload `dist/` folder naar Netlify
+3. Configure environment variables
+
+## 🔍 Troubleshooting
+
+### Veelvoorkomende Problemen
+
+**Kaart laadt niet**
+- Controleer internetverbinding
+- Verifieer OpenStreetMap toegang
+- Controleer Leaflet CSS import
+
+**Verhalen verschijnen niet**
+- Controleer console voor errors
+- Verifieer `stories.json` structuur
+- Controleer afbeelding paden
+
+**Styling problemen**
+- Controleer Tailwind CSS configuratie
+- Verifieer shadcn/ui installatie
+- Controleer PostCSS configuratie
+
+**Build errors**
+- Verifieer Node.js versie (18+)
+- Controleer dependency versies
+- Clear node_modules en reinstall
+
+## 🤝 Bijdragen
+
+1. Fork de repository
+2. Maak een feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit je wijzigingen (`git commit -m 'Add some AmazingFeature'`)
+4. Push naar de branch (`git push origin feature/AmazingFeature`)
+5. Open een Pull Request
+
+## 📝 Licentie
+
+Dit project is gelicenseerd onder de MIT License - zie het LICENSE bestand voor details.
+
+## 🙏 Credits
+
+- **OpenStreetMap** voor kaart data
+- **Leaflet.js** voor kaart functionaliteit
+- **Shadcn/ui** voor UI componenten
+- **Lucide** voor iconen
+- **Unsplash** voor placeholder afbeeldingen
+
+## 📞 Contact
+
+Voor vragen of ondersteuning:
+
+- **GitHub Issues**: [Project Issues](https://github.com/your-username/local-story-explorer/issues)
+- **Email**: thomas05.prinsen@gmail.com
+- **Website**: [Local Story Explorer](https://your-domain.com)
+
+---
+
+**Ontdek de wereld door de ogen van locals** 🌍✨
